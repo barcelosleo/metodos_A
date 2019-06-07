@@ -1,0 +1,79 @@
+% -------------------------------------------------------------
+% Arquivo :  relatório modelo
+% -------------------------------------------------------------
+% O percentual(%) serve para incluir comentários:
+% tudo o que fica à direita dele não é interpretado pelo LaTex
+% Linhas e espaços em branco também **NÃO** são
+% interpretadas pelo LaTex
+
+%% As intruções seguintes são o cabeçalho e devem estar antes do
+%% \begin{document}
+
+%\documenclass: mandatorio, indica o tipo/formato de documento
+\documentclass[brazilian,12pt,a4paper,final]{article}
+% tamanhos de fontes: 10pt, 11pt ou 12pt
+% opções de estilo (padrões): article, report, book, slide, letter (artigo, relatorio, livro, apresentação de slides, carta)
+
+
+
+
+%% Pacotes extras (opcionais):
+
+% *babel* contem as regras de ifenização
+\usepackage[brazil]{babel}
+
+% *t1enc* permite o reconhecimento dos acentos inseridos com o teclado
+%\usepackage{t1enc}
+
+% *inputenc* com opção *utf8* permite reconhecimento dos caracteres com codificação UTF8, que é padrão dos esditores de texto no Linux. Isso permite reconhecimento automático de acentuação.
+\usepackage[utf8]{inputenc}
+
+
+% *graphicx* é para incluir figuras em formato eps
+\usepackage{graphicx} % para produzir PDF diretamente reescrever esta linha assim: \usepackage[pdftex]{graphicx}
+
+% *color* fontes soloridas
+\usepackage{color}
+%%% fim do cabecalho %%%
+
+\pagestyle{empty}
+\title{Métodos Computacionais da Física A}
+\author{Aluno: Leonardo Machado Barcelos - Matrícula: 00302060 \\ IF-UFRGS}
+
+\begin{document}
+
+%Abaixo podem ver como se deve colocar letras acentuadas ou latinas se
+%o pacote *t1enc* não dfosse usado
+\section{Interpolação}
+% Aqui a Introdução \c{c} e \~a  é a forma standar  de escrever
+% carateres ASCII extendidos (acentos, etc), porem com o pacote t1enc
+% declarado acima podemos escrever diretamente ç em lugar d \c{c}, etc
+
+\begin{figure}[hbtp]
+\begin{center}
+\includegraphics[width=8cm]{nev_.pdf}
+\caption{Curva gerada com o método de Neville}
+\label{fig}
+\end{center}
+\end{figure}
+
+\begin{center}
+    \begin{table}[h]
+        \begin{tabular}{|c|c|} \hline
+            x & y \\ \hline
+            -8.0 & 3.5 \\ \hline
+            -1.0 & 4.0 \\ \hline
+            2.5 & 10.3 \\ \hline
+            3.4 & -12.9 \\ \hline
+            5.6 & 9.8 \\ \hline
+            10.1 & 12.1 \\ \hline
+            11.2 & 20.9 \\ \hline
+            15.0 & 2.1 \\ \hline
+        \end{tabular}
+    \caption{Pontos Utilizados para fazer a interpolação}
+    \end{table}
+\end{center}
+
+
+\end{document}
+

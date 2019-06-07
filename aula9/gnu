@@ -1,0 +1,1 @@
+plot "erros.dat" u (1/$1):(abs($2-$3)) title "dn-de", "erros.dat" u (1/$1):(abs($4-$3)) title "dc-de"

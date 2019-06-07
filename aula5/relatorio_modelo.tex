@@ -1,0 +1,165 @@
+% ------------------------------------------------------------- 
+% Arquivo :  relatório modelo                                        
+% ------------------------------------------------------------- 
+% O percentual(%) serve para incluir comentários: 
+% tudo o que fica à direita dele não é interpretado pelo LaTex
+% Linhas e espaços em branco também **NÃO** são
+% interpretadas pelo LaTex
+
+%% As intruções seguintes são o cabeçalho e devem estar antes do
+%% \begin{document}
+
+%\documenclass: mandatorio, indica o tipo/formato de documento
+\documentclass[brazilian,12pt,a4paper,final]{article}
+% tamanhos de fontes: 10pt, 11pt ou 12pt
+% opções de estilo (padrões): article, report, book, slide, letter (artigo, relatorio, livro, apresentação de slides, carta)
+
+
+
+
+%% Pacotes extras (opcionais):
+
+% *babel* contem as regras de ifenização
+\usepackage[brazil]{babel}
+
+% *t1enc* permite o reconhecimento dos acentos inseridos com o teclado
+%\usepackage{t1enc}
+
+% *inputenc* com opção *utf8* permite reconhecimento dos caracteres com codificação UTF8, que é padrão dos esditores de texto no Linux. Isso permite reconhecimento automático de acentuação.
+\usepackage[utf8]{inputenc}
+
+
+% *graphicx* é para incluir figuras em formato eps 
+\usepackage{graphicx} % para produzir PDF diretamente reescrever esta linha assim: \usepackage[pdftex]{graphicx}
+
+% *color* fontes soloridas
+\usepackage{color}
+%%% fim do cabecalho %%%
+
+\pagestyle{empty}
+\title{Métodos Computacionais da Física A}
+\author{Aluno: nome - Matrícula: número \\ IF-UFRGS}
+
+\begin{document}
+\maketitle
+\begin{abstract}
+Descrever de forma sintética o problema 
+e os resultados.
+% as quebras de linha coma a de cima não são interpretadas
+% para forzar quebra de linha deve ser deixada uma linha em branco
+\end{abstract}
+
+%Abaixo podem ver como se deve colocar letras acentuadas ou latinas se
+%o pacote *t1enc* não dfosse usado 
+\section{Introdu\c{c}\~ao} 
+% Aqui a Introdução \c{c} e \~a  é a forma standar  de escrever
+% carateres ASCII extendidos (acentos, etc), porem com o pacote t1enc
+% declarado acima podemos escrever diretamente ç em lugar d \c{c}, etc
+Pequeno histórico do problema. 
+Explicar porque o trabalho é relevante.
+
+\section{Método}
+% Aqui o Método 
+Detalhes sobre o método utilizado \cite{Kauffman_book},
+%procure ao final do texto a referencia a esta bibliografia.
+demonstrações de porque ele funciona.  Limites analíticos, etc.
+
+
+Exemplo de fórmula matemática:
+\mbox{}
+
+$$ \int_{0}^{\infty} f(x) dx $$
+
+\vspace{0.5cm}
+
+Exemplo de lista numerada:
+\begin{enumerate}
+  \item{ primeiro }
+  \item{ etc }
+  \item{ etc }
+\end{enumerate}
+
+% O verbatim faz o latex ignorar a formatação: ai SIM os espaços e
+% linhas em branco contam
+% É util para trechos de código Fortran por exemplo
+\vspace{0.3cm}
+Exemplo de texto sem formatação para código {\bf FORTRAN} por exemplo
+Veja o %\bf acima
+
+\begin{verbatim}
+...
+Read (*,*) a, b, t
+
+ Do i=0,t
+    b(i) = a*c(i)
+ End do
+...
+
+\end{verbatim}
+
+\section{Resultados}
+\vspace{2cm}
+ Aqui os resultados, sua interpretação.
+
+% Aqui incluimos uma figura
+% Para testar este comando devem criar uma figura em formato
+% postscript encapsulado (eps) e deve ter o mesmo nome que aparece entre chaves
+% no caso ``fig.eps'' 
+Incluindo uma figura em formato {\it eps}
+
+\begin{figure}[hbtp]
+\begin{center}
+\includegraphics[width=8cm]{klimt.pdf}
+\caption{Coloque aqui as legendas}
+\label{fig}
+\end{center}
+\end{figure}
+\vspace{0.5cm}
+
+\begin{figure}[htbp]
+\begin{center}
+\rotatebox{-90}{\resizebox{8.0cm}{!}{\includegraphics{klint.pdf}}}
+\caption{Legendas}
+\label{fig_rotacao}
+\end{center}
+\end{figure}
+
+
+
+Incluindo uma tabela:
+\begin{table}[h]
+\begin{tabular}{||l|c|r||} \hline
+tempo& posição & velocidade\\
+\hline
+0 & 1 & 3\\
+ 1 & 2 & 4\\
+ 2 & 3 & 5\\
+ \hline
+ \end{tabular}
+ \caption{A tabela mostra os valores de tempo, posiçao e velocidade do
+{\ldots} }
+\end{table}
+
+\section{Conclusões}
+Recolocar resumidamente o problema, os resultados, as comparações \cite{Wolfram_book} com outros
+trabalhos e as perspectivas futuras que o trabalho abre.
+
+{\color{red} Este é um modelo geral, quando for utilizá-lo para um trabalho
+específico leve em consideração as necessidades desse trabalho,
+cuidando de omitir ou comentar com \% \% as seções que não
+se apliquem.}
+
+\begin{thebibliography}{99}
+
+\bibitem{Kauffman_book}
+S.~Kauffman, {\em The Origins of Order: Self-Organisation and
+Selection in Evolution}, (Oxford University Press, 1993).
+
+\bibitem{Wolfram_book}
+S.~Wolfram, {\em Theory and Application of Cellular Automata},
+(World Scientific, Singapore, 1986).
+
+\end{thebibliography}
+
+\end{document}
+
