@@ -25,6 +25,10 @@ double somatorio(double a, int N, double dx, double step, int firstElement, doub
 }
 
 double simpson(double a, double b, int N, double (*function)(double)) {
+	if (N <= 0) {
+		printf("Valor inválido para o número de divisões");
+		exit(0);
+	}
 	double h = (b - a) / N;
 	double somatorioPares = somatorio(a, N, h, 2, 0, function);
 	double somatorioImpares = somatorio(a, N, h, 2, 1, function);
@@ -32,6 +36,10 @@ double simpson(double a, double b, int N, double (*function)(double)) {
 }
 
 double trapezio(double a, double b, int N, double (*function)(double)) {
+	if (N <= 0) {
+		printf("Valor inválido para o número de divisões");
+		exit(0);
+	}
 	double dx = (b - a) / N;
 	return ((((*function)(a) + (*function)(b)) / 2) + somatorio(a, N, dx, 1, 0, function)) * dx;
 }

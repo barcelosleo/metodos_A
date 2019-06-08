@@ -10,23 +10,38 @@ double f(double x) {
 	return exp(pow(-x, 2)) * sqrt(1 - pow(x, 2));
 }
 
-double s_error(double N) {
-	double n = simpson(0, 1, N, &f);
-	double n2 = simpson(0, 1, N - 2, &f);
-	return fabs(n - n2) / n;
+double* s_error(double N, double a, double b) {
+	double* r = (double*) malloc(sizeof(double) * 3);
+	double n = simpson(a, b, N, &f);
+	double n2 = 1;
+	r[2] = 1;
+	if (N - 2 != 0) {
+		n2 = simpson(0, 1, N - 2, &f);
+		r[2] = fabs(n - n2) / n;
+	}
+	r[0] = N;
+	r[1] = n;
+	return r;
 }
 
-double t_error(double N) {
-	double n = trapezio(0, 1, N, &f);
-	double n2 = trapezio(0, 1, N - 2, &f);
-	return fabs(n - n2) / n;
+double* t_error(double N, double a, double b) {
+	double* r = (double*) malloc(sizeof(double) * 3);
+	double n = trapezio(a, b, N, &f);
+	double n2 = 1;
+	r[2] = 1; // erro
+	if (N - 2 != 0) {
+		n2 = trapezio(0, 1, N - 2, &f);
+		r[2] = fabs(n - n2) / n;
+	}
+	r[0] = N;
+	r[1] = n; // valor da integral
+	return r;
 }
 
-void writeFile(char* fileName, double** data) {
+void writeFile(char* fileName, double** data, int N) {
 	FILE* file = fopen(fileName, "w");
-	size_t size = sizeof(data) / sizeof(data[0]);
-	for (int i = 0; i < size; i++) {
-		fprintf(file, "%lf %lf\n", data[i][0], data[i][1]);
+	for (int i = 0; i < N; i++) {
+		fprintf(file, "%lf %lf %lf\n", data[i][0], data[i][1], data[i][2]);
 	}
 	fclose(file);
 }
@@ -37,12 +52,12 @@ int main(int argc, char const *argv[])
 	double b;
 	double N;
 	int method;
-	char* outFile;
+	char outFile[100];
 
 	do {
 		printf("Qual método deseja utilizar? [1] - Simpson [2] - Trapézio\n");
 		scanf("%d", &method);
-		
+
 		if (method != 1 && method != 2) {
 			printf("Método Inválido! Tente outro.\n");
 		}
@@ -73,33 +88,72 @@ int main(int argc, char const *argv[])
 
 	fprintf(g, "set grid\n");
 	fprintf(g, "set zeroaxis\n");
-	
+	fprintf(g, "set ylabel 'Erro'\n");
+	fprintf(g, "set xlabel 'N'\n");
+	fprintf(g, "set log\n");
+
 	if (method == 1) {
-		fprintf(g, "set title 'Método de Simpson'\n");
+		fprintf(g, "set multiplot layout 2,1 title 'Método de Simpson'\n");
 	} else {
-		fprintf(g, "set title 'Método do Trapézio'\n");
+		fprintf(g, "set multiplot layout 2,1 title 'Método do Trapézio'\n");
 	}
 
-	fprintf(g, "plot '-' title 'f(x)' with lines\n");
+	if (method == 1) {
+		fprintf(g, "plot '-' title 'Erro Simpson' with lines, '-' title 'Erro Trapézio' with lines\n");
+	} else {
+		fprintf(g, "plot '-' title 'Erro Trapézio' with lines, '-' title 'Erro Simpson' with lines\n");
+	}
 
 	double** data = (double**) malloc (sizeof(double*) * (N / 2));
 
-	for (int i = 2; i <= N; i += 2) {
-		int j = i - (i / 2) + 1;
-		data[j] = (double*) malloc (sizeof(double) * 2);
-		data[j][0] = i;
+	int j = 0;
+
+	for (int i = 2; i <= (N + 2); i += 2) {
+		j = (i / 2) - 1;
+		data[j] = (double*) malloc (sizeof(double) * 3);
 		if (method == 1) {
-			data[j][1] = s_error(i);
+			data[j] = s_error(i, a, b);
 		} else {
-			data[j][1] = t_error(i);			
+			data[j] = t_error(i, a, b);
 		}
 
-		fprintf(g, "%lf %lf\n", data[j][0], data[j][1]);
+		fprintf(g, "%lf %lf\n", data[j][0], data[j][2]);
 	}
 
 	fprintf(g, "e\n");
 
-	writeFile(outFile, data);
+	writeFile(outFile, data, --j);
+
+	j = 0;
+
+	double** comparsion_data = (double**) malloc (sizeof(double*) * (N / 2));
+
+	for (int i = 2; i <= (N + 2); i += 2) {
+		j = (i / 2) - 1;
+		comparsion_data[j] = (double*) malloc (sizeof(double) * 3);
+		if (method == 1) {
+			comparsion_data[j] = t_error(i, a, b);
+		} else {
+			comparsion_data[j] = s_error(i, a, b);
+		}
+
+		fprintf(g, "%lf %lf\n", comparsion_data[j][0], comparsion_data[j][2]);
+	}
+
+	fprintf(g, "e\n");
+
+	fprintf(g, "unset log\n");
+	fprintf(g, "set ylabel 'Integral'\n");
+	fprintf(g, "plot '-' with lines title 'Valor da Integral'\n");
+
+	for (int i = 0; i < (N / 2); i++) {
+		fprintf(g, "%lf %lf\n", data[i][0], data[i][1]);
+	}
+
+	fprintf(g, "e\n");
+
+	free(data);
+	free(comparsion_data);
 
 	return 0;
 }
