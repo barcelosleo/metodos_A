@@ -1,6 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <math.h>
+#include <float.h>
+
+#define MAX_INTERATIONS 50000
 
 typedef struct BM_ {
 	char* name;
@@ -22,3 +26,19 @@ typedef FILE* GnuPipe;
 GnuPipe initializeGnuPipe();
 void plotData(GnuPipe gnuPipe, double initialValue, double finalValue, double step, double (*function)(double));
 void gnuPlotCommand(GnuPipe gnu, char* command);
+
+// INTERPOLAÇÃO
+
+double laGrange(double x, double** data, int numberOfPoints);
+double getAij(double** points, int i, int j, double x, int n);
+double neville(double x, int n, double** points);
+
+// ZERO DE FUNÇÕES
+
+double newtonRaphson(double x0, int p, double (*function)(double), double (*derivative)(double));
+double interacaoSimples(double x0, int p, double (*function)(double));
+double bisseccao(double min, double max, int p, double (*function)(double));
+
+double df_direita(double x, double h, double (*function)(double));
+double df_centrada(double x, double h, double (*function)(double));
+
