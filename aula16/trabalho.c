@@ -4,7 +4,7 @@
 #include <time.h>
 #include <string.h>
 
-#include "../mleocomp.h"
+#include "mleocomp.h"
 
 double f(double x) {
 	return exp(pow(-x, 2)) * sqrt(1 - pow(x, 2));
