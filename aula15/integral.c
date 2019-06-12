@@ -8,11 +8,11 @@
 #define PRECISION 20
 
 double f(double x) {
-	return x;
+	return exp(-pow(x, 2)) * sqrt(1 - pow(x, 2));
 }
 
 double f1(double x) {
-	return exp(pow(x, 2));
+	return x;
 }
 
 double f2(double x) {
@@ -21,6 +21,9 @@ double f2(double x) {
 
 double f3(double x) {
 	return -2*x + 3;
+}
+double f4(double x) {
+	return exp(-pow(x,2));
 }
 
 void main() {
@@ -62,11 +65,11 @@ void main() {
 
 	if (method == 1) {
 		BM* bm = startBenchmark("Tempo de processamento:");
-		integral = simpson(a, b, N, &f3);
+		integral = simpson(a, b, N, &f);
 		stopBenchmark(bm);
 	} else {
 		BM* bm = startBenchmark("Tempo de processamento:");
-		integral = trapezio(a, b, N, &f3);		
+		integral = trapezio(a, b, N, &f);		
 		stopBenchmark(bm);
 	}
 

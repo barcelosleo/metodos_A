@@ -65,3 +65,137 @@ void plotData(GnuPipe gnuPipe, double initialValue, double finalValue, double st
 void gnuPlotCommand(GnuPipe gnu, char* command) {
 	fprintf(gnu, "%s\n", command);
 }
+
+// INTERPOLAÇÃO
+double L(int i, double x, double** data, int numberOfPoints) {
+    double multiplication = 1;
+    for (int j = 0; j < numberOfPoints; j++) {
+        if (i != j) multiplication *= (x - data[j][0]) / (data[i][0] - data[j][0]);
+    }
+    return multiplication;
+}
+
+double laGrange(double x, double** data, int numberOfPoints) {
+    double sum = 0;
+    for (int i = 0; i < numberOfPoints; i++) {
+        sum += data[i][1] * L(i, x, data, numberOfPoints);
+    }
+    return sum;
+
+}
+
+double getAij(double** points, int i, int j, double x, int n) {
+    if (j == 0) {
+        return points[i][1];
+    }
+
+    if (i == n) { // controlar para quando o valor recebido for diferente de 0,n - 1
+
+    }
+
+    int k = j + i;
+    double Xi = points[i][0];
+    double Xk = points[k][0];
+
+    double AijEsq = getAij(points, i, j - 1, x, n);
+    double AijBaixo = getAij(points, i + 1, j - 1, x, n);
+
+    double Aij = (1 / (Xi - Xk)) * (((x - Xk) * AijEsq) - ((x - Xi) * AijBaixo));
+
+    return Aij;
+}
+
+double neville(double x, int n, double** points) {
+    double Pn = getAij(points, 0, n - 1, x, n);
+    return Pn;
+}
+
+// ZERO DE FUNÇÕES
+
+double newtonRaphson(double x0, int p, double (*function)(double), double (*derivative)(double)) {
+    int i = 1;
+    double xN = x0;
+    double xN1 = xN - ((*function)(xN) / (*derivative)(xN));
+    while ((fabs(xN1 - xN) > pow(10, -p)) && i < MAX_INTERATIONS && xN1 <= DBL_MAX) {
+        xN = xN1;
+        xN1 = xN - ((*function)(xN) / (*derivative)(xN));
+        i++;
+    }
+
+    if ((fabs(xN1 - xN) > pow(10, -p)) || i == MAX_INTERATIONS) {
+        printf("Raíz não encontrada! Tente outro x0.\n");
+        exit(0);
+    } else {
+        // printf("Raíz aproximada: %.*lf\n", p, xN1);
+        // printf("Interções: %d\n", i);
+    }
+
+    return xN1;
+}
+
+double interacaoSimples(double x0, int p, double (*function)(double)) {
+    int i = 1;
+    double xN = x0;
+    double xN1 = (*function)(xN) + x0;
+    while ((fabs(xN1 - xN) > pow(10, -p)) && i < MAX_INTERATIONS && fabs(xN1 - xN) <= DBL_MAX) {
+        xN = xN1;
+        xN1 = (*function)(xN) + xN;
+        i++;
+    }
+
+    if ((fabs(xN1 - xN) > pow(10, -p)) || i == MAX_INTERATIONS || xN1 >= DBL_MAX) {
+        printf("Raíz não encontrada! Tente outro x0.\n");
+        exit(0);
+    } else {
+        // printf("Raíz aproximada: %.*lf\n", p, xN1);
+        // printf("Interções: %d\n", i);
+    }
+
+    return xN1;
+}
+
+double getSignal(double number) {
+    return number >= 0 ? 1 : -1;
+}
+
+double bisseccao(double min, double max, int p, double (*function)(double)) {
+    int i = 1;
+    double xN = min;
+    double xN1 = max;
+    double step = fabs(max - min);
+    double dxN_signal = getSignal((*function)(xN));
+    double dxN1_signal = getSignal((*function)(xN1));
+    while ((fabs(xN1 - xN) > pow(10, -p)) && i < MAX_INTERATIONS && fabs(xN1 - xN) <= DBL_MAX) {
+        if (dxN_signal != dxN1_signal) {
+            step /= 2 * -1;
+        }
+
+        xN = xN1;
+        xN1 += step;
+
+        dxN_signal = getSignal((*function)(xN));
+        dxN1_signal = getSignal((*function)(xN1));
+
+        i++;
+    }
+
+    if ((fabs(xN1 - xN) > pow(10, -p)) || i == MAX_INTERATIONS || xN1 >= DBL_MAX) {
+        printf("Raíz não encontrada! Tente outro x0.\n");
+        exit(0);
+    } else {
+        // printf("Raíz aproximada: %.*lf\n", p, xN1);
+        // printf("Interções: %d\n", i);
+    }
+
+    return xN1;
+}
+
+// DERIVAÇÃO
+
+double df_direita(double x, double h, double (*function)(double)) {
+	return ((*function)(x + h) - (*function)(x)) / h;
+}
+
+double df_centrada(double x, double h, double (*function)(double)) {
+	return (((*function)(x + h) - (*function)(x - h)) / (2 * h));
+}

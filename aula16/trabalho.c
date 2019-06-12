@@ -7,7 +7,7 @@
 #include "mleocomp.h"
 
 double f(double x) {
-	return exp(pow(-x, 2)) * sqrt(1 - pow(x, 2));
+	return exp(-pow(x, 2)) * sqrt(1 - pow(x, 2));
 }
 
 double* s_error(double N, double a, double b) {
@@ -108,7 +108,7 @@ int main(int argc, char const *argv[])
 
 	int j = 0;
 
-	for (int i = 2; i <= (N + 2); i += 2) {
+	for (int i = 2; i <= (N + 4); i += 2) {
 		j = (i / 2) - 1;
 		data[j] = (double*) malloc (sizeof(double) * 3);
 		if (method == 1) {
@@ -128,7 +128,7 @@ int main(int argc, char const *argv[])
 
 	double** comparsion_data = (double**) malloc (sizeof(double*) * (N / 2));
 
-	for (int i = 2; i <= (N + 2); i += 2) {
+	for (int i = 2; i <= (N + 4); i += 2) {
 		j = (i / 2) - 1;
 		comparsion_data[j] = (double*) malloc (sizeof(double) * 3);
 		if (method == 1) {
