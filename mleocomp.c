@@ -199,3 +199,118 @@ double df_direita(double x, double h, double (*function)(double)) {
 double df_centrada(double x, double h, double (*function)(double)) {
 	return (((*function)(x + h) - (*function)(x - h)) / (2 * h));
 }
+
+// MATRIZES
+
+
+
+Matrix* createMatrix(int lines, int columns) {
+	Matrix* newMatrix = (Matrix*) malloc (sizeof(Matrix));
+	newMatrix->lines = lines;
+	newMatrix->columns = columns;
+	newMatrix->data = (double**) malloc (sizeof(double*) * lines);
+	for(int i = 0; i < lines; i++) {
+		newMatrix->data[i] = calloc (columns, sizeof(double));
+	}
+	return newMatrix;
+}
+
+Matrix* getSubMatrix(Matrix* original, int currentLine, int currentColumn) {
+	Matrix* subMatrix = createMatrix(original->lines - 1, original->lines - 1);
+	for (int i = 0, k = 0; i < original->lines; i++) {
+		for (int j = 0, l = 0; j < original->columns; j++) {
+			if (i != currentLine && j != currentColumn) {
+				subMatrix->data[k][l] = original->data[i][j];
+				l++;
+			}
+		}
+		if (i != currentLine) k++;
+	}
+	return subMatrix;
+}
+
+void printMatrix(Matrix* matrix) {
+	for(int i = 0; i < matrix->lines; i++) {
+		for(int j = 0; j < matrix->columns; j++) {
+			printf("%lf\t", matrix->data[i][j]);
+		}
+		printf("\n");
+	}
+}
+
+double getDeterminant(Matrix* matrix) {
+	if (matrix->lines != matrix->columns) {
+		printf("Matriz não quadrada, portanto, não existe o determinante!\n");
+		exit(0);
+	}
+	if (matrix->lines == 2) {
+		return (matrix->data[0][0] * matrix->data[1][1]) - (matrix->data[0][1] * matrix->data[1][0]);
+	}
+
+	double determinant = 0;
+
+	for(int j = 0; j < matrix->columns; j++) {
+		Matrix* subMatrix = getSubMatrix(matrix, 0, j);
+		determinant += matrix->data[0][j] * getDeterminant(subMatrix) * pow(-1, j);
+		free(subMatrix);
+	}
+
+	return determinant;
+}
+
+Matrix* getTranposedMatrix(Matrix* matrix) {
+	Matrix* transposed = createMatrix(matrix->lines, matrix->columns);
+	for(int i = 0; i < matrix->lines; i++) {
+		for(int j = 0; j < matrix->columns; j++) {
+			transposed->data[j][i] = matrix->data[i][j];
+		}
+	}
+	return transposed;
+}
+
+Matrix* getCofactorMatrix(Matrix* matrix) {
+	Matrix* cofactor = createMatrix(matrix->lines, matrix->columns);
+	for(int i = 0; i < matrix->lines; i++) {
+		for(int j = 0; j < matrix->columns; j++) {
+			Matrix* subMatrix = getSubMatrix(matrix, i, j);
+			cofactor->data[i][j] = pow(-1, i + j) * getDeterminant(subMatrix);
+			free(subMatrix);
+		}
+	}
+	return cofactor;
+
+}
+
+Matrix* multiplyMatrixByNumber(Matrix* matrix, double n) {
+	Matrix* m_copy = createMatrix(matrix->lines, matrix->columns);
+	for (int i = 0; i < matrix->lines; i++) {
+		for (int j = 0; j < matrix->columns; j++) {
+			m_copy->data[i][j] = matrix->data[i][j] * n;
+		}
+	}
+	return m_copy;
+}
+
+Matrix* getInverse(Matrix* matrix) {
+	if (matrix->lines != matrix->columns) {
+		printf("Matriz não quadrada, portanto, não é invertível!");
+		exit(0);
+	}
+
+	double determinant = getDeterminant(matrix);
+
+	if (determinant == 0) {
+		printf("Matriz não é invertível, pois sua determinante é 0!");
+		exit(0);
+	}
+
+	Matrix* confactor = getCofactorMatrix(matrix);
+	Matrix* confactorTranposed = getTranposedMatrix(confactor);
+
+	Matrix* inverted = multiplyMatrixByNumber(confactorTranposed, 1 / determinant);
+	
+	free(confactor);
+	free(confactorTranposed);
+
+	return inverted;
+}
