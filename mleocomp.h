@@ -42,3 +42,5 @@ double bisseccao(double min, double max, int p, double (*function)(double));
 double df_direita(double x, double h, double (*function)(double));
 double df_centrada(double x, double h, double (*function)(double));
 
+// REGRESSAO LINEAR
+
