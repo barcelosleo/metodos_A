@@ -4,6 +4,22 @@
 
 #include "../mleocomp.h"
 
+double sumX(int p, int N, double** points, double (*function)(double, double)) {
+	double sum = 0;
+	for (int i = 0; i < N; i++) {
+		sum += (*function)(points[i][1], p);
+	}
+	return sum;
+}
+
+double sumYX(int p, int N, double** points, double (*function)(double, double)) {
+	double sum = 0;
+	for (int i = 0; i < N; i++) {
+		sum += (*function)(points[i][0] * points[i][1], p);
+	}
+	return sum;
+}
+
 int main() {
 	Matrix *m = createMatrix(3,3), *a, *i;
 	// a = {{1.,4.,-7.},{-1.,-3.,10.},{-2.,-6.,12.}};
