@@ -42,3 +42,20 @@ double bisseccao(double min, double max, int p, double (*function)(double));
 double df_direita(double x, double h, double (*function)(double));
 double df_centrada(double x, double h, double (*function)(double));
 
+// MATRIZES
+
+typedef struct Matrix_ {
+	double** data;
+	int lines;
+	int columns;
+} Matrix;
+
+Matrix* createMatrix(int lines, int columns);
+Matrix* getSubMatrix(Matrix* original, int currentLine, int currentColumn);
+void printMatrix(Matrix* matrix);
+double getDeterminant(Matrix* matrix);
+Matrix* getTranposedMatrix(Matrix* matrix);
+Matrix* getCofactorMatrix(Matrix* matrix);
+Matrix* multiplyMatrixByNumber(Matrix* matrix, double n);
+Matrix* getInverse(Matrix* matrix);
+
