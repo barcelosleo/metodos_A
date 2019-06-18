@@ -12,6 +12,31 @@ void stopBenchmark(BM* bm) {
 	printf("\"%s\": %lf ms\n", bm->name, time_diff_ms);
 }
 
+PointList* createPointList(int size) {
+	PointList* pl = (PointList*) malloc (sizeof(PointList));
+	pl->size = size;
+	pl->points = calloc(sizeof(Point), size);
+	return pl;
+}
+
+PointList* readPointsFromFile(char* fileName, int size) {
+	PointList* pl = createPointList(size);
+	FILE* file = fopen(fileName, "r");
+	for (int i = 0; i < size; i++) {
+		fscanf(file, "%lf %lf", &pl->points[i].x, &pl->points[i].y);
+	}
+	fclose(file);
+	return pl;
+}
+
+void savePointsToFile(char* fileName, PointList* points) {
+	FILE* file = fopen(fileName, "w");
+	for (int i = 0; i < points->size; i++) {
+		fprintf(file, "%lf %lf", points->points[i].x, points->points[i].y);
+	}
+	fclose(file);
+}
+
 // INTEGRAÇÃO
 
 double somatorio(double a, int N, double dx, double step, int firstElement, double (*function)(double)) {

@@ -6,6 +6,16 @@
 
 #define MAX_INTERATIONS 50000
 
+typedef struct Point_ {
+	double x;
+	double y;
+} Point;
+
+typedef struct PointList_ {
+	int size;
+	Point* points;
+} PointList;
+
 typedef struct BM_ {
 	char* name;
 	clock_t c0;
@@ -14,11 +24,17 @@ typedef struct BM_ {
 BM* startBenchmark(char* name);
 void stopBenchmark(BM* bm);
 
+PointList* createPointList(int size);
+PointList* readPointsFromFile(char* fileName, int size);
+void savePointsToFile(char* fileName, PointList* points);
+
 // INTEGRAÇÃO
 
 double somatorio(double a, int N, double dx, double step, int firstElement, double (*function)(double));
 double simpson(double a, double b, int N, double (*function)(double));
 double trapezio(double a, double b, int N, double (*function)(double));
+
+double somatorioVetorizado(double** points);
 
 // PLOTING WITH GNUPLOT
 
