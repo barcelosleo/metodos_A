@@ -1,0 +1,2 @@
+- Para compilar execute 'make'. Feito isto, será criada uma pasta chamada dist, onde conterá estará contido o executável.
+- Para limpar execute 'make clean'.
