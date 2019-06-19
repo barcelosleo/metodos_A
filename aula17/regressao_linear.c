@@ -1,7 +1,5 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include <math.h>
-#include <string.h>
 
 #include "../mleocomp.h"
 
@@ -19,7 +17,7 @@ double** getPoints(char* fileName, int numberOfPoints) {
 int main() {
 	Matrix *i;
 	// m->data = {{1.,4.,-7.},{-1.,-3.,10.},{-2.,-6.,12.}};
-	double** points = getPoints("pontos.dat", 10);
+	double** points = getPoints("pontos.dat", 100);
 
 	// Matrix* m = createMatrix(2, 2);
 	// m->data = points;
@@ -28,7 +26,7 @@ int main() {
 	// i = getInverse(m);
 	// printMatrix(i);
 
-	i = getIncognitoMatrix(points, 2, 10);
+	i = getIncognitoMatrix(points, 2, 100);
 	printMatrix(i);
 
 	free(i);
