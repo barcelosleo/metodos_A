@@ -243,6 +243,11 @@ double getDeterminant(Matrix* matrix) {
 		printf("Matriz não quadrada, portanto, não existe o determinante!\n");
 		exit(0);
 	}
+
+	if (matrix->lines == 1) {
+		return fabs(matrix->data[0][0]);
+	}
+
 	if (matrix->lines == 2) {
 		return (matrix->data[0][0] * matrix->data[1][1]) - (matrix->data[0][1] * matrix->data[1][0]);
 	}
@@ -291,6 +296,22 @@ Matrix* multiplyMatrixByNumber(Matrix* matrix, double n) {
 	return m_copy;
 }
 
+Matrix* multiplyMatrixByMatrix(Matrix* m1, Matrix* m2) {
+	if (m1->columns != m2->lines) {
+		printf("Não é possível multiplicar estas matrizes");
+		exit(0);
+	}
+	Matrix* product = createMatrix(m1->lines, m2->columns);
+	for(int i = 0; i < m1->lines; i++) {
+		for(int j = 0; j < m2->columns; j++) {
+			for(int k = 0; k < m1->lines; k++) {
+				product->data[i][j] += m1->data[i][k] * m2->data[k][j];
+			}
+		}
+	}
+	return product;
+}
+
 Matrix* getInverse(Matrix* matrix) {
 	if (matrix->lines != matrix->columns) {
 		printf("Matriz não quadrada, portanto, não é invertível!");
@@ -304,13 +325,72 @@ Matrix* getInverse(Matrix* matrix) {
 		exit(0);
 	}
 
-	Matrix* confactor = getCofactorMatrix(matrix);
-	Matrix* confactorTranposed = getTranposedMatrix(confactor);
+	Matrix* cofactor = getCofactorMatrix(matrix);
+	Matrix* cofactorTranposed = getTranposedMatrix(cofactor);
 
-	Matrix* inverted = multiplyMatrixByNumber(confactorTranposed, 1 / determinant);
-	
-	free(confactor);
-	free(confactorTranposed);
+	Matrix* inverted = multiplyMatrixByNumber(cofactorTranposed, 1 / determinant);
+
+	free(cofactor);
+	free(cofactorTranposed);
 
 	return inverted;
+}
+
+// FITTING
+
+double pointSumX(int p, int N, double** points, double (*function)(double, double)) {
+	if (p == 0) return 1;
+	double sum = 0;
+	for (int i = 0; i < N; i++) {
+		sum += (*function)(points[i][0], p);
+	}
+	return sum;
+}
+
+double pointSumYX(int p, int N, double** points, double (*function)(double, double)) {
+	double sum = 0;
+	for (int i = 0; i < N; i++) {
+		sum += points[i][1] * (*function)(points[i][0], p);
+	}
+	return sum;
+}
+
+Matrix* getCoefficientMatrix(double** points, int polynomialDegree, int N) {
+	Matrix* coefficientMatrix = createMatrix(polynomialDegree + 1, polynomialDegree + 1);
+	for(int i = 0; i < coefficientMatrix->lines; i++) {
+		for(int j = 0; j < coefficientMatrix->columns; j++) {
+			if (i == 0 && j == 0) {
+				coefficientMatrix->data[i][j] = N;
+			} else {
+				coefficientMatrix->data[i][j] = pointSumX(i + j, N, points, &pow);
+			}
+		}
+	}
+	return coefficientMatrix;
+}
+
+Matrix* getIndependentTermsMatrix(double** points, int polynomialDegree, int N) {
+	Matrix* independentTermsMatrix = createMatrix(polynomialDegree + 1, 1);
+	for(int i = 0; i < independentTermsMatrix->lines; i++) {
+		independentTermsMatrix->data[i][0] = pointSumYX(i, N, points, &pow);
+	}
+	return independentTermsMatrix;
+}
+
+Matrix* getIncognitoMatrix(double** points, int polynomialDegree, int N) {
+	Matrix *incognitoMatrix, *independentTermsMatrix, *coefficientMatrix, *inverse;
+
+	incognitoMatrix = createMatrix(polynomialDegree + 1, 1);
+
+	independentTermsMatrix = getIndependentTermsMatrix(points, polynomialDegree, N);
+	coefficientMatrix = getCoefficientMatrix(points, polynomialDegree, N);
+
+	inverse = getInverse(coefficientMatrix);
+	free(coefficientMatrix);
+
+	incognitoMatrix = multiplyMatrixByMatrix(inverse, independentTermsMatrix);
+	free(independentTermsMatrix);
+	free(inverse);
+
+	return incognitoMatrix;
 }

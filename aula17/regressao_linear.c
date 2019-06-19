@@ -1,44 +1,35 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
+#include <string.h>
 
 #include "../mleocomp.h"
 
-double sumX(int p, int N, double** points, double (*function)(double, double)) {
-	double sum = 0;
-	for (int i = 0; i < N; i++) {
-		sum += (*function)(points[i][1], p);
-	}
-	return sum;
-}
-
-double sumYX(int p, int N, double** points, double (*function)(double, double)) {
-	double sum = 0;
-	for (int i = 0; i < N; i++) {
-		sum += (*function)(points[i][0] * points[i][1], p);
-	}
-	return sum;
+double** getPoints(char* fileName, int numberOfPoints) {
+    FILE* dataFile = fopen(fileName, "r");
+    double** data = (double**) malloc (sizeof(double*) * numberOfPoints);
+    for (int i = 0; i < numberOfPoints; i++) {
+        data[i] = (double*) malloc (sizeof(double) * 2);
+        fscanf(dataFile, "%lf %lf", &data[i][0], &data[i][1]);
+    }
+    fclose(dataFile);
+    return data;
 }
 
 int main() {
-	Matrix *m = createMatrix(3,3), *a, *i;
-	// a = {{1.,4.,-7.},{-1.,-3.,10.},{-2.,-6.,12.}};
-	m->data[0][0] = 1.;
-	m->data[0][1] = 4.;
-	m->data[0][2] = -7.;
-	m->data[1][0] = -1.;
-	m->data[1][1] = -3.;
-	m->data[1][2] = -10.;
-	m->data[2][0] = -2.;
-	m->data[2][1] = -6.;
-	m->data[2][2] = 12.;
-	printMatrix(m);
-	printf("-------------------------\n");
-	i = getInverse(m);
-	printf("-------------------------\n");
+	Matrix *i;
+	// m->data = {{1.,4.,-7.},{-1.,-3.,10.},{-2.,-6.,12.}};
+	double** points = getPoints("pontos.dat", 10);
+
+	// Matrix* m = createMatrix(2, 2);
+	// m->data = points;
+
+	// printMatrix(m);
+	// i = getInverse(m);
+	// printMatrix(i);
+
+	i = getIncognitoMatrix(points, 2, 10);
 	printMatrix(i);
 
-	free(m);
-	free(a);
 	free(i);
 }

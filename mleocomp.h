@@ -57,5 +57,13 @@ double getDeterminant(Matrix* matrix);
 Matrix* getTranposedMatrix(Matrix* matrix);
 Matrix* getCofactorMatrix(Matrix* matrix);
 Matrix* multiplyMatrixByNumber(Matrix* matrix, double n);
+Matrix* multiplyMatrixByMatrix(Matrix* m1, Matrix* m2);
 Matrix* getInverse(Matrix* matrix);
 
+// FITTING
+
+double pointSumX(int p, int N, double** points, double (*function)(double, double));
+double pointSumYX(int p, int N, double** points, double (*function)(double, double));
+Matrix* getCoefficientMatrix(double** points, int polynomialDegree, int N);
+Matrix* getIndependentTermsMatrix(double** points, int polynomialDegree, int N);
+Matrix* getIncognitoMatrix(double** points, int polynomialDegree, int N);
