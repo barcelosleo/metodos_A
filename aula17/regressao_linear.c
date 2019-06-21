@@ -37,7 +37,7 @@ int main() {
     GnuPipe g = initializeGnuPipe();
 
 	fprintf(g, "set grid\n");
-	fprintf(g, "set title 'Regressão Linear'\n");
+	fprintf(g, "set title 'Fitting por Polinômio de grau %d'\n", degree);
 	fprintf(g, "set zeroaxis\n");
 	fprintf(g, "f(x) = ");
 	for(int i = incognito->lines - 1; i >= 0; i--) {
@@ -45,7 +45,11 @@ int main() {
 			fprintf(g, "%lf*x**%d", incognito->data[i][0], i);
 		} else {
 			char s = incognito->data[i][0] >= 0 ? '+' : '-';
-			fprintf(g, " %c %lf*x**%d", s, incognito->data[i][0], i);
+			if (i == 0) {
+				fprintf(g, " %c %lf", s, fabs(incognito->data[i][0]));
+			} else {
+				fprintf(g, " %c %lf*x**%d", s, fabs(incognito->data[i][0]), i);
+			}
 		}
 	}
 	fprintf(g, "\n");
@@ -58,7 +62,11 @@ int main() {
 			fprintf(g, "%lfx^%d", incognito->data[i][0], i);
 		} else {
 			char s = incognito->data[i][0] >= 0 ? '+' : '-';
-			fprintf(g, " %c %lfx^%d", s, incognito->data[i][0], i);
+			if (i == 0) {
+				fprintf(g, " %c %lf", s, fabs(incognito->data[i][0]));
+			} else {
+				fprintf(g, " %c %lfx^%d", s, fabs(incognito->data[i][0]), i);
+			}
 		}
 	}
 	fprintf(g, "'\n");
