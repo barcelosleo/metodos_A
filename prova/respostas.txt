@@ -1,0 +1,12 @@
+11
+2.1334
+0.803609
+0.169492 1.444068
+
+1) Utilizado o método da bissecção
+
+2) O erro pode ser aproxima pelo número de partições do intervalo
+
+3) Os valores corretos são "0.542373 1.53898", mas não sei porquê o meu algoritmo está jogando aqueles valores. O algoritmo foi testado para graus de polinômios superiores e os coeficientes calculados estavam corretos nestes testes. Não sei dizer o motivo para ele estar entregando os valores incorretos.
+
+Obs.: Arquivo make enviado junto, bastando executar 'make' na pasta. O executável será gerado dentro da pasta dist/
